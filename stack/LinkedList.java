@@ -1,65 +1,82 @@
 
 public class LinkedList<E> implements Collection<E> {
 
-  public class Node {
-    E element;
-    Node nextEl;
+    public class Node {
+        Object element;
+        Node nextEl;
 
-    Node(E element, Node nextEl) {
-      this.element = element;
-      this.nextEl = nextEl;
+        Node(Object element, Node nextEl) {
+            this.element = element;
+            this.nextEl = nextEl;
+        }
     }
 
-    public Node getNextEl() {
-      return nextEl;
+    Node head = null;
+    int size = 0;
+
+    public boolean add(E item, int index) {
+        Node newNode = new Node(item, head);
+        if (this.size == 0 || index == 0) {
+            this.head = newNode;
+            size++;
+            return true;
+        }
+
+        Node curNode = this.head;
+        Node lastNode = null;
+        for (int i = 0; i < index; i++) {
+            lastNode = curNode;
+            curNode = curNode.nextEl;
+        }
+
+        newNode.nextEl = curNode;
+        lastNode.nextEl = newNode;
+        return true;
     }
 
-    public E getElement() {
-      return element;
+    public E remove(int index) {
+        if (this.size == 0) {
+            return null;
+        }
+        Node curNode = this.head;
+        Node lastNode = curNode;
+        while (curNode.nextEl != null) {
+            if (this.equals(curNode.element)) {
+                lastNode.nextEl = curNode.nextEl;
+                curNode.nextEl = null;
+                size--;
+            }
+            lastNode = curNode;
+            curNode = curNode.nextEl;
+        }
+        return null;
     }
-  }
 
-  Node head = null;
-  int size = 0;
-
-  public boolean add(E item) {
-    Node newNode = new Node(item, head);
-    head = newNode;
-    size++;
-    return true;
-  }
-
-  public boolean remove(int index) {
-    if (this.size > 0) {
-      Node current = head;
-      Node previous = null;
-
-      for (int i = 0; i < index; i++) {
-        previous = current;
-        current = current.nextEl;
-      }
-
-      previous.nextEl = current.nextEl;
-      current.nextEl = null;
-      size--;
-      return true;
+    public E getList(int index) {
+        Node curNode = this.head;
+        for(int i = 0; i < index; i++) {
+            curNode = curNode.nextEl;
+            if(curNode == null){
+                throw new NullPointerException("No element");
+            }
+        }
+        return (E) curNode.element;
     }
-    return false;
-  }
 
-  public int size(){
-    return this.size;
-  }
 
-  public Iterator<E> iterator() {
-    return new LinkedListIterator<E>();
-  }
-
-  public void display() {
-    Node current = head;
-    while(current != null){
-      System.out.println(current.element);
-      current = current.nextEl;
+    public int size() {
+        return this.size;
     }
-  }
+
+    public Iterator<E> iterator() {
+        return new LinkedListIterator<E>();
+    }
+
+    public void display() {
+        Node current = head;
+        while (current != null) {
+            System.out.println(current.element);
+            current = current.nextEl;
+        }
+    }
 }
